@@ -31,15 +31,13 @@ app.use(express.static('public'));
 // Separated Routes for each Resource
 const newPollSubmitRoutes = require('./routes/new-poll-submit');
 const newPollDisplayRoutes = require('./routes/new-poll-display');
-const pollsRoutes = require('./routes/polls');
 const pollResultsRoutes = require('./routes/poll-results');
-// const voteRoutes = require('./routes/vote'); // Not sure how to implement yet
+const voteRoutes = require('./routes/vote'); // Not sure how to implement yet
 
 app.use(newPollSubmitRoutes);
 app.use(newPollDisplayRoutes);
-app.use('/polls', pollsRoutes);
 app.use(pollResultsRoutes);
-// app.use('/vote', voteRoutes); // Not sure how to implement yet
+app.use('/vote', voteRoutes); // Not sure how to implement yet
 
 // Home page
 app.get('/', (req, res) => {
