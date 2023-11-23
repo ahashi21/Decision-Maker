@@ -32,12 +32,12 @@ app.use(express.static('public'));
 const newPollSubmitRoutes = require('./routes/new-poll-submit');
 const newPollDisplayRoutes = require('./routes/new-poll-display');
 const pollResultsRoutes = require('./routes/poll-results');
-const voteRoutes = require('./routes/vote'); // Not sure how to implement yet
+const voteRoutes = require('./routes/vote');
 
 app.use(newPollSubmitRoutes);
 app.use(newPollDisplayRoutes);
 app.use(pollResultsRoutes);
-app.use('/vote', voteRoutes); // Not sure how to implement yet
+app.use('/vote', voteRoutes);
 
 // Home page
 app.get('/', (req, res) => {
