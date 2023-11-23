@@ -31,12 +31,8 @@ router.post('/polls/new', async (req, res) => {
   try {
     const { email, choices } = req.body;
     const { adminLink, userLink } = await PollHelper.createPoll(email, choices);
-<<<<<<< HEAD
-    res.redirect(`/polls/${userLink}`); // To be replaced with mailgun integration and redirect to "success" page
-=======
     sendEmail(email, 'Your poll has been created!', `Send this link to your friends: ${userLink}\nCheck the results here: ${adminLink}`);
     res.redirect('/poll_created');
->>>>>>> d53d08478877e98a440b4c0e96267c9a511ea900
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: 'Error!' });
