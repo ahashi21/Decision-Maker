@@ -27,27 +27,25 @@ app.use(
 app.use(express.static('public'));
 
 // Separated Routes for each Resource
-// Note: Feel free to replace the example routes below with your own
-const userApiRoutes = require('./routes/users-api');
-const widgetApiRoutes = require('./routes/widgets-api');
-const usersRoutes = require('./routes/users');
+const newPollSubmitRoutes = require('./routes/new-poll-submit');
+const newPollDisplayRoutes = require('./routes/new-poll-display');
+const pollResultsRoutes = require('./routes/poll-results');
+const voteRoutes = require('./routes/vote');
+const voteSubmitRoutes = require('./routes/vote-submit')
+const routeHandler = require('./routes/route-handler');
 
-// Mount all resource routes
-// Note: Feel free to replace the example routes below with your own
-// Note: Endpoints that return data (eg. JSON) usually start with `/api`
-app.use('/api/users', userApiRoutes);
-app.use('/api/widgets', widgetApiRoutes);
-app.use('/users', usersRoutes);
-// Note: mount other resources here, using the same pattern above
+app.use(newPollSubmitRoutes);
+app.use(newPollDisplayRoutes);
+app.use('/poll-results',pollResultsRoutes);
+app.use('/vote', voteRoutes);
+app.use(voteSubmitRoutes);
+app.use('/', routeHandler);
 
 // Home page
-// Warning: avoid creating more routes in this file!
-// Separate them into separate routes files (see above).
-
 app.get('/', (req, res) => {
   res.render('index');
 });
 
 app.listen(PORT, () => {
-  console.log(`Example app listening on port ${PORT}`);
+  console.log(`Server is listening on port ${PORT}`);
 });
