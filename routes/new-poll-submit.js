@@ -5,14 +5,14 @@ const mailgun = require('mailgun-js');
 
 // Mailgun configuration
 const mg = mailgun({
-  apiKey: '49e18c89f7fd32422d9adc3334aaeeaa-5d2b1caa-82b398c5',
-  domain: 'sandbox87dba3e3ffa04898897c8a0868b7285b.mailgun.org'
+  apiKey: process.env.MAILGUN_API_KEY,
+  domain: process.env.MAILGUN_DOMAIN
 });
 
 // Send an email using Mailgun
 function sendEmail(to, subject, text) {
   const data = {
-    from: 'decision-maker@sandbox87dba3e3ffa04898897c8a0868b7285b.mailgun.org',
+    from: process.env.MAILGUN_SENDER_EMAIL,
     to,
     subject,
     text,
