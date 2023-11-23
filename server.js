@@ -6,8 +6,6 @@ const sassMiddleware = require('./lib/sass-middleware');
 const express = require('express');
 const morgan = require('morgan');
 
-const PollHelper = require('./helpers/poll-helpers');
-
 const PORT = process.env.PORT || 8080;
 const app = express();
 
@@ -33,11 +31,15 @@ const newPollSubmitRoutes = require('./routes/new-poll-submit');
 const newPollDisplayRoutes = require('./routes/new-poll-display');
 const pollResultsRoutes = require('./routes/poll-results');
 const voteRoutes = require('./routes/vote');
+const voteSubmitRoutes = require('./routes/vote-submit')
+const routeHandler = require('./routes/route-handler');
 
 app.use(newPollSubmitRoutes);
 app.use(newPollDisplayRoutes);
-app.use(pollResultsRoutes);
+app.use('/poll-results',pollResultsRoutes);
 app.use('/vote', voteRoutes);
+app.use(voteSubmitRoutes);
+app.use('/', routeHandler);
 
 // Home page
 app.get('/', (req, res) => {
@@ -45,5 +47,5 @@ app.get('/', (req, res) => {
 });
 
 app.listen(PORT, () => {
-  console.log(`Example app listening on port ${PORT}`);
+  console.log(`Server is listening on port ${PORT}`);
 });
