@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const PollHelper = require('../helpers/poll-helper');
 
-router.post('/polls', async (req, res) => {
+router.post('/polls/new', async (req, res) => {
   try {
     const { email, choices } = req.body;
     const { adminLink, userLink } = await PollHelper.createPoll(email, choices);
