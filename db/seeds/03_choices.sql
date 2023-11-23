@@ -1,14 +1,15 @@
--- Insert choices for Poll 1
-INSERT INTO choices (poll_id, option, description) VALUES 
-(1, 'Option 1 for Poll 1', 'Description 1'),
-(1, 'Option 2 for Poll 1', 'Description 2');
-
--- Insert choices for Poll 2
-INSERT INTO choices (poll_id, option, description) VALUES 
-(2, 'Option 1 for Poll 2', 'Description 1'),
-(2, 'Option 2 for Poll 2', 'Description 2');
-
--- Insert choices for Poll 3
-INSERT INTO choices (poll_id, option, description) VALUES 
-(3, 'Option 1 for Poll 3', 'Description 1'),
-(3, 'Option 2 for Poll 3', 'Description 2');
+exports.seed = function(knex) {
+  // Deletes ALL existing entries
+  return knex('choices').del()
+    .then(function () {
+      // Inserts seed entries
+      return knex('choices').insert([
+        {poll_id: 1, option: 'Option 1 for Poll 1', description: 'Description 1'},
+        {poll_id: 1, option: 'Option 2 for Poll 1', description: 'Description 2'},
+        {poll_id: 2, option: 'Option 1 for Poll 2', description: 'Description 1'},
+        {poll_id: 2, option: 'Option 2 for Poll 2', description: 'Description 2'},
+        {poll_id: 3, option: 'Option 1 for Poll 3', description: 'Description 1'},
+        {poll_id: 3, option: 'Option 2 for Poll 3', description: 'Description 2'}
+      ]);
+    });
+};
