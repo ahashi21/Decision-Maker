@@ -9,23 +9,47 @@ class PollHelper {
     return crypto.randomBytes(10).toString('hex');
   }
 
-  // Creates a new poll using creator's ID and generated links
-  static async createPoll(creatorId) {
-    const adminLink = this.generateRandomLink();
-    const userLink = this.generateRandomLink();
-
+  // Creates a new poll using creator's email and generated links
+  static async createPoll(email, choices) {
     try {
-      const pollId = await knex('polls').insert({ creator_id: creatorId, admin_link: adminLink, user_link: userLink });
-      return pollId;
+
+      const adminLink = this.generateRandomLink();
+      const userLink = this.generateRandomLink();
+
+      return await knex.transaction(async (trx) => {
+
+        const [userId] = await trx('users')
+          .insert({ email: email }, 'id');
+
+        const [pollId] = await trx('polls')
+          .insert({
+            creator_id: userId,
+            admin_link: adminLink,
+            user_link: userLink,
+          }, 'id');
+
+        const choicesData = choices.map((choice) => ({
+          poll_id: pollId,
+          title: choice.title,
+          description: choice.description,
+        }));
+
+        await trx('choices').insert(choicesData);
+
+        await trx.commit();
+
+        return { adminLink, userLink };
+      });
     } catch (error) {
       console.error(error);
       throw new Error('Failed to create poll!');
     }
   }
 
-  static getPoll(pollId) {
+
+  static getPoll(userLink) {
     return knex('choices')
-    .where({ poll_id: pollId });
+      .where({ user_link: userLink });
   }
 
   static async organizeVotes(pollId) {
@@ -60,7 +84,8 @@ class PollHelper {
 
   static async getPollResults(adminLink) {
     try {
-      const poll = await knex('polls').where({ admin_link: adminLink }).first();
+      const poll = await knex('polls')
+        .where({ admin_link: adminLink }).first();
       if (!poll) {
         throw new Error('Poll not found!');
       }
@@ -76,12 +101,6 @@ class PollHelper {
       throw new Error('Failed to get poll results!');
     }
   }
-
-  // Not yet sure how best to implement voting
-  // static voteOnPoll(pollId, choiceId, voterName, ranking) {
-  //   return knex('votes')
-  //   .insert({ poll_id: pollId, choice_id: choiceId, voter_name: voterName, ranking: ranking });
-  // }
 }
 
 module.exports = PollHelper;

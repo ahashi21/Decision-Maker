@@ -3,11 +3,11 @@ const router = express.Router();
 const PollHelper = require('../helpers/poll-helpers');
 
 router.post('/polls', async (req, res) => {
-  const { creatorId } = req.body;
+  const { email, choices } = req.body;
 
   try {
-    const pollId = await PollHelper.createPoll(creatorId);
-    res.json({ pollId });
+    const { adminLink, userLink } = await PollHelper.createPoll(email, choices);
+    res.redirect('/');
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: 'Error!' });
