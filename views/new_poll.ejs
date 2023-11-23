@@ -1,53 +1,84 @@
 <!DOCTYPE html>
 <html>
-	<head>
-		<title>New Poll</title>
-		  <link rel="stylesheet" href="/vendor/normalize-4.1.1.css" type="text/css" />
-	    <link rel="stylesheet" href="/vendor/border-box.css" type="text/css" />
-	    <link rel="stylesheet" href="/styles/new_poll.css" type="text/css" />
-      <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
-      <link rel="stylesheet" type="text/css" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
-		  <script type="text/javascript" src="/vendor/jquery-3.0.0.js"></script>
-	    <script type="text/javascript" src="/scripts/app.js"></script>
-	    <script type="text/javascript" src="/scripts/new_poll.js"></script>
-	</head>
-	<body>
+<head>
+    <title>New Poll</title>
+    <link rel="stylesheet" href="/vendor/normalize-4.1.1.css" type="text/css" />
+    <link rel="stylesheet" href="/vendor/border-box.css" type="text/css" />
+    <link rel="stylesheet" href="/styles/new_poll.css" type="text/css" />
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <script type="text/javascript" src="/vendor/jquery-3.0.0.js"></script>
+    <script type="text/javascript" src="/scripts/app.js"></script>
+    <script type="text/javascript" src="/scripts/new-poll.js"></script>
+</head>
+<body>
     <div class="userinfo">
-		  <form action="/users" method="POST">
-        <div class="form-group emailbox">
-          <label for="email">Email address:</label>
-          <input type="email" class="form-control email">
-        </div>
-        <div class="form-group usernamebox">
-          <label for="username">Name:</label>
-          <input type="text" class="form-control username">
-        </div>
-        <button type="submit" class="btn btn-default submitbutton">Start!</button>
-      </form>
+        <form action="/users" method="POST">
+            <div class="form-group emailbox">
+                <label for="email">Email address:</label>
+                <input type="email" class="form-control email">
+            </div>
+            <div class="form-group usernamebox">
+                <label for="username">Name:</label>
+                <input type="text" class="form-control username">
+            </div>
+            <button type="submit" class="btn btn-default submitbutton">Start!</button>
+        </form>
     </div>
     <form action="/polls" method="POST">
-      <section class="poll-form">
-        <div class="input-group mb-3">
-          <span class="input-group-text" id="inputGroup-sizing-default">Question</span>
-          <input type="text" class="form-control question" placeholder="Please Ask Any Question" aria-label="" aria-describedby="basic-addon1">
-        </div>
-        <div class="input-group mb-3 option-box">
-          <span class="input-group-text" id="inputGroup-sizing-default">Option 1</span>
-          <input type="text" class="form-control option-input" placeholder="Option" aria-label="" aria-describedby="basic-addon1">
+        <section class="poll-form">
+            <div class="input-group mb-3">
+                <span class="input-group-text" id="inputGroup-sizing-default">Question</span>
+                <input type="text" class="form-control question" placeholder="What would you like to vote on?" aria-label="" aria-describedby="basic-addon1">
+            </div>
+
+            <% for (let i = 0; i < 3; i++) { %>
+                <div class="input-group mb-3 option-box">
+                    <span class="input-group-text" id="inputGroup-sizing-default">Option <%= i + 1 %></span>
+                    <input type="text" class="form-control option-input" placeholder="Option" aria-label="" aria-describedby="basic-addon1">
+                    <div class="input-group-append">
+                        <button class="btn btn-outline-secondary delete-option" type="button">Delete</button>
+                    </div>
+                </div>
+            <% } %>
+        </section>
         <div class="input-group-append">
-          <button class="btn btn-outline-secondary delete-option" type="button">Delete</button>
+            <button class="btn btn-outline-secondary add-option" type="button">Add more options</button>
         </div>
-      </div>
-      <div class="input-group mb-3 option-box">
-        <span class="input-group-text" id="inputGroup-sizing-default">Option 2</span>
-          <input type="text" class="form-control option-input" placeholder="Option" aria-label="" aria-describedby="basic-addon1">
-        <div class="input-group-append">
-          <button class="btn btn-outline-secondary delete-option" type="button">Delete</button>
-        </div>
-      </div>
-      </section>
-      <div class="input-group-append">
-        <button class="btn btn-outline-secondary add-option" type="button">Add more options</button>
-      </div>
-      <button class="btn submit-btn">Submit</button>
+        <button class="btn submit-btn">Submit</button>
     </form>
+
+    <script>
+      // JavaScript code for dynamic option numbering after deletion and addition
+      $(document).on('click', '.delete-option', function () {
+          $(this).closest('.option-box').remove();
+          updateOptionNumbers();
+      });
+  
+      $(document).on('click', '.add-option', function () {
+          addOption();
+          updateOptionNumbers();
+      });
+  
+      function addOption() {
+          const optionCount = $('.option-box').length + 1;
+          const optionHtml = `
+              <div class="input-group mb-3 option-box">
+                  <span class="input-group-text" id="inputGroup-sizing-default">Option ${optionCount}</span>
+                  <input type="text" class="form-control option-input" placeholder="Option" aria-label="" aria-describedby="basic-addon1">
+                  <div class="input-group-append">
+                      <button class="btn btn-outline-secondary delete-option" type="button">Delete</button>
+                  </div>
+              </div>
+          `;
+          $('.poll-form').append(optionHtml);
+      }
+  
+      function updateOptionNumbers() {
+          $('.option-box').each(function (index) {
+              $(this).find('.input-group-text').text('Option ' + (index + 1));
+          });
+      }
+    </script> 
+</body>
+</html>
