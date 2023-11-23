@@ -1,5 +1,5 @@
 const knexConfig = require('../knexfile');
-const knex = require('knex')(knexConfig[ENV]);
+const knex = require('knex')(knexConfig[process.env.NODE_ENV]);
 const crypto = require('crypto');
 
 // Created a class whose properties are all methods related to the creation / viewing of polls, to keep code clean and legible
