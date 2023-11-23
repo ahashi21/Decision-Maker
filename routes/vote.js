@@ -1,12 +1,12 @@
 const express = require('express');
 const router = express.Router();
-const PollHelper = require('../helpers/poll-helpers');
+const PollHelper = require('../helpers/poll-helper');
 
-router.get('/polls/:userLink', async (req, res) => {
+router.get('/vote/:link', async (req, res) => {
   const { userLink } = req.params;
 
   try {
-    const poll = await PollHelper.getPollByUserLink(userLink);
+    const poll = await PollHelper.getPoll(userLink);
 
     if (!poll) {
       return res.status(404).json({ error: 'Poll not found!' });
