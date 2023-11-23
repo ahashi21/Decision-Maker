@@ -32,7 +32,7 @@ router.post('/polls', async (req, res) => {
     const { email, choices } = req.body;
     const { adminLink, userLink } = await PollHelper.createPoll(email, choices);
     sendEmail(email, 'Your poll has been created!', `Send this link to your friends: ${userLink}\nCheck the results here: ${adminLink}`);
-    res.redirect('/'); // To be replaced with redirection to "success" page
+    res.redirect('/poll_created');
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: 'Error!' });
