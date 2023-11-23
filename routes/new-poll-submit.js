@@ -27,6 +27,30 @@ function sendEmail(to, subject, text) {
   });
 }
 
+// Mailgun configuration
+const mg = mailgun({
+  apiKey: process.env.MAILGUN_API_KEY,
+  domain: process.env.MAILGUN_DOMAIN
+});
+
+// Send an email using Mailgun
+function sendEmail(to, subject, text) {
+  const data = {
+    from: process.env.MAILGUN_SENDER_EMAIL,
+    to,
+    subject,
+    text,
+  };
+
+  mg.messages().send(data, (error, body) => {
+    if (error) {
+      console.error(error);
+    } else {
+      console.log(body);
+    }
+  });
+}
+
 router.post('/polls/new', async (req, res) => {
   try {
     const { email, choices } = req.body;
