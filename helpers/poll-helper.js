@@ -3,6 +3,12 @@ const knexEnvironment = process.env.ENV || 'development';
 const knex = require('knex')(knexConfig[knexEnvironment]);
 const crypto = require('crypto');
 
+// Add query logging
+knex.on('query', (queryData) => {
+  console.log(queryData);
+});
+
+
 // Created a class whose properties are all methods related to the creation / viewing of polls, to keep code clean and legible
 class PollHelper {
 
@@ -14,38 +20,39 @@ class PollHelper {
   // Creates a new poll using creator's email and generated links
   static async createPoll(email, title, options, info) {
     try {
-
       const adminLink = this.generateLink(12);
       const userLink = this.generateLink(10);
-
+      let pollId;
+  
+      // Log input values
+      console.log('Input values:');
+      console.log('email:', email);
+      console.log('title:', title);
+      console.log('adminLink:', adminLink);
+      console.log('userLink:', userLink);
+  
       return await knex.transaction(async (trx) => {
-
-        let pollId = await trx('polls')
+        const insertedIds = await trx('polls')
           .insert({
             creator_email: email,
             title,
             admin_link: adminLink,
             user_link: userLink,
           }, 'id');
-
-          pollId = Number(pollId);
-
-          for (let i = 0; i < options.length; i++) {
-            const choiceData = {
-              poll_id: pollId,
-              option: options[i],
-              description: info[i],
-            };
-    
-            await trx('choices').insert(choiceData);
-          }
-
-        await trx.commit();
-
-        return { adminLink, userLink };
+  
+        // Log insertedIds
+        console.log('Inserted IDs:', insertedIds);
+  
+        if (!insertedIds || insertedIds.length === 0) {
+          throw new Error('Failed to create poll: No inserted IDs found.');
+        }
+  
+        pollId = insertedIds[0];
+  
+        // ...
       });
     } catch (error) {
-      console.error(error);
+      console.error('Error creating poll:', error);
       throw new Error('Failed to create poll!');
     }
   }
