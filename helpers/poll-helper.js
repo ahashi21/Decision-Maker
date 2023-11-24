@@ -1,5 +1,6 @@
 const knexConfig = require('../knexfile');
-const knex = require('knex')(knexConfig[process.env.NODE_ENV]);
+const knexEnvironment = process.env.ENV || 'development';
+const knex = require('knex')(knexConfig[knexEnvironment]);
 const crypto = require('crypto');
 
 // Created a class whose properties are all methods related to the creation / viewing of polls, to keep code clean and legible
@@ -14,8 +15,8 @@ class PollHelper {
   static async createPoll(email, title, options, info) {
     try {
 
-      const adminLink = this.generateRandomLink(12);
-      const userLink = this.generateRandomLink(10);
+      const adminLink = this.generateLink(12);
+      const userLink = this.generateLink(10);
 
       return await knex.transaction(async (trx) => {
 

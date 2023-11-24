@@ -1,6 +1,9 @@
 // load .env data into process.env
 require('dotenv').config();
 
+const PollHelper = require('./helpers/poll-helper.js');
+const mailgun = require('mailgun-js');
+
 // Web server config
 const sassMiddleware = require('./lib/sass-middleware');
 const express = require('express');
@@ -34,11 +37,11 @@ const voteRoutes = require('./routes/vote');
 const voteSubmitRoutes = require('./routes/vote-submit');
 const routeHandler = require('./routes/route-handler');
 
+app.use('/polls/new', newPollDisplayRoutes);
 app.use('/polls', newPollSubmitRoutes);
-app.use(newPollDisplayRoutes);
 app.use('/poll-results',pollResultsRoutes);
 app.use('/vote', voteRoutes);
-app.use(voteSubmitRoutes);
+app.use('*', voteSubmitRoutes);
 app.use('/', routeHandler);
 
 // Home page
@@ -47,7 +50,47 @@ app.get('/', (req, res) => {
 });
 app.get('/polls/new', (req, res) => {
   // Render the page where users can create a new poll
-  res.render('new-poll');
+  res.render('new_poll');
+});
+
+
+
+
+// Mailgun configuration
+const mg = mailgun({
+  apiKey: process.env.MAILGUN_API_KEY,
+  domain: process.env.MAILGUN_DOMAIN
+});
+
+// Send an email using Mailgun
+function sendEmail(to, subject, text) {
+  const data = {
+    from: process.env.MAILGUN_SENDER_EMAIL,
+    to,
+    subject,
+    text,
+  };
+
+  mg.messages().send(data, (error, body) => {
+    if (error) {
+      console.error(error);
+    } else {
+      console.log(body);
+    }
+  });
+}
+
+app.post('/polls', async (req, res) => {
+  try {
+    const { email, title, options, info } = req.body;
+    const { adminLink, userLink } = await PollHelper.createPoll(email, title, options, info);
+    const pollVars = { adminLink, userLink };
+    sendEmail(email, 'Your poll has been created!', `Send this link to your friends: ${userLink}\nCheck the results here: ${adminLink}`);
+    res.render('poll_created', pollVars);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Error!' });
+  }
 });
 
 app.listen(PORT, () => {

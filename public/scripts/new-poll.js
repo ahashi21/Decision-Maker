@@ -1,4 +1,3 @@
-
 const newOption = function () {
 	let newPollOption =
 	`<div class="input-group mb-3 option-box">
@@ -38,48 +37,8 @@ const newOption = function () {
   	});
   };
 
-  const submitUserData = function () {
-    $(".submitbutton").on("click", function (e) {
-      e.preventDefault();
-      const $username = $(".username").val();
-      const $email = $(".email").val();
-      const $error = $(".erroruser");
-      const email_regex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/i;
-  
-      if (!email_regex.test($email) && $email) {
-        $error.text("Sorry, Please enter a valid email address");
-      } else if ($username && $email) {
-        $.ajax({
-          url: '/polls/new', // Change this URL based on  route for creating a poll
-          type: 'POST',
-          data: {
-            $username,
-            $email
-          },
-          success: function () {
-            console.log("Successfully sent user data")
-            $error.empty();
-            toggleSections(); // Call the function to show the poll creation section
-          }
-        })
-        .done(function (data) {
-          if (data === 'done') {
-            $(".userinfo").fadeOut(function () {
-              $(".polls").fadeIn();
-            });
-          }
-        });
-      } else {
-        $error.text("Sorry, Please fill out all input fields");
-      }
-    });
-  }
-  
-
-
-// <<<<<<< HEAD
   const submitPollData = function () {
-  	$('.submit-btn').on('click', function(e) {
+  	$('#poll-form').on('submit', function(e) {
   		e.preventDefault()
       const $email = $(".email").val()
       const $question = $(".question").val()
@@ -95,7 +54,7 @@ const newOption = function () {
       });
   	
     const question = $('.question').val();
-    if ($options && $question && flag) {
+    if ($options && $question) {
   		$.ajax({
   			url:'/polls',
   			type:'POST',
@@ -141,7 +100,6 @@ const newOption = function () {
 
 
   $(document).ready(function() {
-  	submitUserData();
   	addOption();
   	deleteOption();
   	submitPollData();
