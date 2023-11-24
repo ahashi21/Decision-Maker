@@ -27,10 +27,10 @@ function sendEmail(to, subject, text) {
   });
 }
 
-router.post('/polls/new', async (req, res) => {
+router.post('/polls', async (req, res) => {
   try {
-    const { email, choices } = req.body;
-    const { adminLink, userLink } = await PollHelper.createPoll(email, choices);
+    const { email, title, choices } = req.body;
+    const { adminLink, userLink } = await PollHelper.createPoll(email, title, choices);
     sendEmail(email, 'Your poll has been created!', `Send this link to your friends: ${userLink}\nCheck the results here: ${adminLink}`);
     res.redirect('/poll_created');
   } catch (error) {

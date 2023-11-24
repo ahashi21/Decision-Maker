@@ -11,7 +11,7 @@ class PollHelper {
   }
 
   // Creates a new poll using creator's email and generated links
-  static async createPoll(email, choices) {
+  static async createPoll(email, title, choices) {
     try {
 
       const adminLink = this.generateRandomLink(12);
@@ -19,12 +19,10 @@ class PollHelper {
 
       return await knex.transaction(async (trx) => {
 
-        const [userId] = await trx('users')
-          .insert({ email: email }, 'id');
-
         const [pollId] = await trx('polls')
           .insert({
-            creator_id: userId,
+            creator_email: email,
+            title,
             admin_link: adminLink,
             user_link: userLink,
           }, 'id');
@@ -46,7 +44,6 @@ class PollHelper {
       throw new Error('Failed to create poll!');
     }
   }
-
 
   static getPoll(userLink) {
     return knex('choices')
