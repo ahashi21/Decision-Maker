@@ -1,120 +1,25 @@
 <!DOCTYPE html>
-
 <html>
-  <head>
-    <title>Poll Admin Page</title>
-      <link rel="stylesheet" href="/vendor/normalize-4.1.1.css" type="text/css"/>
-      <link rel="stylesheet" href="/vendor/border-box.css" type="text/css"/>
-      <link rel="stylesheet" href="/styles/admin.css" type="text/css"/>
-      <script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
-      <script type="text/javascript" src="/scripts/app.js"></script>
-      <script type="text/javascript" src="/scripts/admin.js"></script>
-      <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.4.0/Chart.min.js"></script>
 
+<head>
+  <title>Admin Poll</title>
+  <link rel="stylesheet" href="/vendor/normalize-4.1.1.css" type="text/css" />
+  <link rel="stylesheet" href="/vendor/border-box.css" type="text/css" />
+  <link rel="stylesheet" href="/styles/admin_poll.css" type="text/css" />
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
+    integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+  <link rel="stylesheet" type="text/css" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+  <script type="text/javascript" src="/vendor/jquery-3.0.0.js"></script>
+  <script type="text/javascript" src="/scripts/app.js"></script>
+  <script type="text/javascript" src="/scripts/admin.js"></script>
+</head>
 
-  </head>
 <body>
-  <section class="value" style="display:none;">
-      <% const descriptions_arry = []; %>
-      <% const scores_arry = []; %>
-      <% for (const i = 0; i < descriptions.length; i++) { %>
-      <% descriptions_arry.push(descriptions[i]) %>
-      <% } %>
-      <% for (const j = 0; j < scores.length; j++) { %>
-      <% scores_arry.push(scores[j]) %>
-      <% } %>
-      <div class="question" ><%= question %></div>
-      <div class="descriptions"><%= descriptions_arry %></div>
-      <div class="scores"><%= scores_arry %></div>
+  <section class="admin-poll-form">
+    <div id="admin-poll-options" class="options-list">
+      <!-- Options will be dynamically added here based on database ranking -->
+    </div>
   </section>
-  <h1 class="result">decision maker !</h1>
-  <ul id="url-container">
-    <li>
-      <span class="url-label">Admin URL</span>
-      <input class="url" type="text" value="localhost:8080/polls/<%= pollId %>/admin" readonly>
-    </li>
-    <li>
-      <span class="url-label">Voter URL</span>
-      <input class="url" type="text" value="localhost:8080/polls/<%= pollId %>/" readonly>
-    </li>
-  </ul>
-  <div id="wrapper">
-    <canvas id="myChart"></canvas>
-  </div>
-
-  </section>
-
-  <section class="send-email">
-    <form action="/polls/<%= pollId %>/admin" method="POST">
-      <button class="btn btn-light send-email-btn" data-pollId="<%= pollId %>">Send Email</button>
-    </form>
-  </section>
-
-
-<script>
-    const ctx = $("#myChart");
-    const descriptions_arry = $(".descriptions").text().split(",");
-    const scores_arry = $(".scores").text().split(",");
-    Chart.defaults.global.defaultFontFamily = 'Helvetica';
-
-    const myChart = new Chart(ctx, {
-    type: 'horizontalBar',
-    data: {
-        labels: descriptions_arry,
-        datasets: [{
-            label: 'Score',
-            data: scores_arry,
-            backgroundColor: [
-                'rgba(54, 162, 235, 0.2)',
-                'rgba(75, 192, 192, 0.2)',
-                'rgba(153, 102, 255, 0.2)',
-                'rgba(255, 159, 64, 0.2)'
-            ],
-            borderColor: [
-                'rgba(54, 162, 235, 1)',
-                'rgba(75, 192, 192, 1)',
-                'rgba(153, 102, 255, 1)',
-                'rgba(255, 159, 64, 1)'
-            ],
-            borderWidth: 2
-        }]
-    },
-    options: {
-      responsive: true,
-      maintainAspectRatio: true,
-      title: {
-            display: true,
-            text: $(".question").text(),
-            fontSize: 30
-        },
-      scales: {
-            xAxes: [{
-                ticks: {
-                    beginAtZero:true,
-                    stepSize: 1
-                },
-                gridLines: {
-                display:false
-            }
-            }],
-            yAxes: [{
-            gridLines: {
-                display:false
-            }
-            }]
-        },
-      layout: {
-            padding: {
-                left: 20,
-                right: 40,
-                top: 30,
-                bottom: 30
-            }
-        }
-    }
-
-});
-</script>
-
 </body>
+
 </html>

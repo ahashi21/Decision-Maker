@@ -1,3 +1,4 @@
+<!-- This is for voting after they click the link -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -5,15 +6,74 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
   <script type="text/javascript" src="/vendor/jquery-3.0.0.js"></script>
+  <!-- jQuery UI CDN -->
+  <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+  <link rel="stylesheet" type="text/css" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+
+  <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+  <link rel="stylesheet" href="/styles/voting_poll.css" type="text/css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.7.0/animate.min.css">
   <title>Voting</title>
+    <!-- Submit options script-->
+  <script>
+    $(function() {
+      $('#submit-vote-form').on('submit', function(e) {
+        e.preventDefault();
+  
+        const pollId = $(this).data('pollid');
+        const choices = $('#sortable .options-item').map(function() {
+          return {
+            choice_id: $(this).data('id'),
+            rank: $(this).index() + 1 // Ranking based on the order in the list
+          };
+        }).get();
+  
+        $.ajax({
+          url: `/submit/${userLink}`,
+          method: 'POST',
+          data: {
+            choices: choices
+          },
+          success: function() {
+            // Handle success (e.g., redirect or show a success message)
+          },
+          error: function(error) {
+            console.error('Error submitting vote:', error);
+          }
+        });
+      });
+    });
+  </script>
+  <!-- Sorting script-->
+  <script>
+    $( function() {
+      $( "#sortable" ).sortable();
+      $( "#sortable" ).disableSelection();
+    } );
+    $( function() {
+    $( document ).tooltip();
+    } );
+  </script>
 </head>
 <body>
-  <h1><%= poll.question %></h1>
-
-  <div>
-    <% poll.options.forEach((option) => { %>
-      <p><%= option %></p>
-    <%  }) %>
+  <h3 class="error"></h3>
+  <div id="poll" class="hidden">
+    <div class="poll-container">
+      <h1 class="poll-question"><%= question %></h1>
+      <form id="submit-vote-form" data-pollid="<%= id %>">
+        <ul id="sortable" class="options-list">
+          <% options.forEach((option, i) => { %>
+            <li title ="<%=option.info%>" data-id="<%= option.id %>" class="ui-state-default options-item">
+              <span class="options-counter"><%= i + 1 %></span>
+              <i class="fa fa-arrows-v"></i>
+              <%= option.description %>
+            </li>
+          <% }) %>
+        </ul>
+        <button type="submit" class="send-vote"><span><i class="fa fa-paper-plane"></i> Submit</span></button>
+      </form>
+    </div>
   </div>
+  
 </body>
 </html>

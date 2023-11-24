@@ -81,29 +81,27 @@ const newOption = function () {
   const submitPollData = function () {
   	$('.submit-btn').on('click', function(e) {
   		e.preventDefault()
+      const $email = $(".email").val()
       const $question = $(".question").val()
   		const $options = $(".option-input").val()
   		const $error = $(".erroroption")
-      const flag = true;
-  		const options = []
-  		$('.option-input').toArray().forEach((option) => {
-  			options.push($(option).val())
-        if (!$(option).val()) {
-          flag = false;
-        }
-  		})
-  		// Use class info for option info input fields
-  		const info = []
-    $('.option-info').toArray().forEach((info_) => {
-      info.push($(info_).val());
-    })
+  		const options = [];
+      const info = [];
+      $('.option-input').each(function(index, optionInput) {
+        const optionValue = $(optionInput).val();
+        const descriptionValue = $(optionInput).next('.option-description').val();
+        options.push(optionValue);
+        info.push(descriptionValue);
+      });
+  	
     const question = $('.question').val();
     if ($options && $question && flag) {
   		$.ajax({
   			url:'/polls',
   			type:'POST',
   			data: {
-  				question,
+          email: $email, 
+  				title: $question,
   				options,
   				info
   			},

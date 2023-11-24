@@ -2,15 +2,16 @@ const knexConfig = require('../knexfile');
 const knex = require('knex')(knexConfig[process.env.NODE_ENV]);
 
 class VoteHelper {
-  static async submitVote(pollId, voterName, choices) {
+  static async submitVote(pollId, voterName) {
    
-    const result = await knex('votes').insert({
-      poll_id: pollId,
-      voter_name: voterName,
-      choices: JSON.stringify(choices)
+    const votePromises = choices.map(async (choice) => {
+      return knex('votes').insert({
+        poll_id: pollId,
+        choice_id: choice.choice_id,
+        rank: choice.rank
+      });
     });
-
-    return result;
+    await Promise.all(votePromises);
   }
 
   static async getPollId(link, linkType) {
