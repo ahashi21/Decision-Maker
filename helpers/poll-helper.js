@@ -87,19 +87,13 @@ class PollHelper {
 
   static async getPollResults(adminLink) {
     try {
-      const title = await knex('polls')
-        .select('title')
-        .where({ admin_link: adminLink })
-        .first();
-
-      if (!title) {
-        throw new Error('Poll not found!');
-      }
+      const poll = await knex('polls').select('id', 'title').where({ admin_link: adminLink }).first();
+      if (!poll) throw new Error('Poll not found!');
 
       const organizedVotes = await this.organizeVotes(poll.id);
 
       return {
-        title,
+        title: poll.title,
         results: organizedVotes,
       };
     } catch (error) {

@@ -2,14 +2,14 @@
 require('dotenv').config();
 
 const PollHelper = require('./helpers/poll-helper.js');
-const mailgun = require('mailgun-js');
+// const mailgun = require('mailgun-js');
 
 // Web server config
 const sassMiddleware = require('./lib/sass-middleware');
 const express = require('express');
 const morgan = require('morgan');
 
-const PORT = process.env.PORT || 8080;
+const PORT = process.env.PORT || 8083;
 const app = express();
 
 app.set('view engine', 'ejs');
@@ -57,35 +57,35 @@ app.get('/polls/new', (req, res) => {
 
 
 // Mailgun configuration
-const mg = mailgun({
-  apiKey: process.env.MAILGUN_API_KEY,
-  domain: process.env.MAILGUN_DOMAIN
-});
+// const mg = mailgun({
+//   apiKey: process.env.MAILGUN_API_KEY,
+//   domain: process.env.MAILGUN_DOMAIN
+// });
 
-// Send an email using Mailgun
-function sendEmail(to, subject, text) {
-  const data = {
-    from: process.env.MAILGUN_SENDER_EMAIL,
-    to,
-    subject,
-    text,
-  };
+// // Send an email using Mailgun
+// function sendEmail(to, subject, text) {
+//   const data = {
+//     from: process.env.MAILGUN_SENDER_EMAIL,
+//     to,
+//     subject,
+//     text,
+//   };
 
-  mg.messages().send(data, (error, body) => {
-    if (error) {
-      console.error(error);
-    } else {
-      console.log(body);
-    }
-  });
-}
+//   mg.messages().send(data, (error, body) => {
+//     if (error) {
+//       console.error(error);
+//     } else {
+//       console.log(body);
+//     }
+//   });
+// }
 
 app.post('/polls', async (req, res) => {
   try {
     const { email, title, options, info } = req.body;
     const { adminLink, userLink } = await PollHelper.createPoll(email, title, options, info);
     const pollVars = { adminLink, userLink };
-    sendEmail(email, 'Your poll has been created!', `Send this link to your friends: ${userLink}\nCheck the results here: ${adminLink}`);
+    // sendEmail(email, 'Your poll has been created!', `Send this link to your friends: ${userLink}\nCheck the results here: ${adminLink}`);
     res.render('poll_created', pollVars);
   } catch (error) {
     console.error(error);
