@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const PollHelper = require('../helpers/poll-helper');
-const mailgun = require('mailgun-js');
+/* const mailgun = require('mailgun-js');
 
 // Mailgun configuration
 const mg = mailgun({
@@ -27,12 +27,15 @@ function sendEmail(to, subject, text) {
   });
 }
 
+*/
+
 router.post('/polls', async (req, res) => {
   try {
-    const { email, title, choices } = req.body;
-    const { adminLink, userLink } = await PollHelper.createPoll(email, title, choices);
-    sendEmail(email, 'Your poll has been created!', `Send this link to your friends: ${userLink}\nCheck the results here: ${adminLink}`);
-    res.redirect('/poll_created');
+    const { email, title, options, info } = req.body;
+    const { adminLink, userLink } = await PollHelper.createPoll(email, title, options, info);
+    const pollVars = { adminLink, userLink };
+    //sendEmail(email, 'Your poll has been created!', `Send this link to your friends: ${userLink}\nCheck the results here: ${adminLink}`);
+    res.redirect('poll_created', pollVars);
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: 'Error!' });

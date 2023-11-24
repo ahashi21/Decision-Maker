@@ -11,7 +11,7 @@ class PollHelper {
   }
 
   // Creates a new poll using creator's email and generated links
-  static async createPoll(email, title, choices) {
+  static async createPoll(email, title, options, info) {
     try {
 
       const adminLink = this.generateRandomLink(12);
@@ -27,10 +27,10 @@ class PollHelper {
             user_link: userLink,
           }, 'id');
 
-        const choicesData = choices.map((choice) => ({
+        const choicesData = options.map((option, index) => ({
           poll_id: pollId,
-          title: choice.title,
-          description: choice.description,
+          title: option,
+          description: info[index],
         }));
 
         await trx('choices').insert(choicesData);
@@ -82,16 +82,19 @@ class PollHelper {
 
   static async getPollResults(adminLink) {
     try {
-      const poll = await knex('polls')
-        .where({ admin_link: adminLink }).first();
-      if (!poll) {
+      const title = await knex('polls')
+        .select('title')
+        .where({ admin_link: adminLink })
+        .first();
+
+      if (!title) {
         throw new Error('Poll not found!');
       }
 
       const organizedVotes = await this.organizeVotes(poll.id);
 
       return {
-        poll,
+        title,
         results: organizedVotes,
       };
     } catch (error) {

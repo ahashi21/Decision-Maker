@@ -15,65 +15,38 @@
 </head>
 
 <body>
-  <div class="erroruser"></div>
-  <div id="user-info-section">
-    <div class="userinfo">
-      <form action="/create-poll" method="POST">
-        <div class="form-group emailbox">
-          <input type="email" id="email" name="email" class="email" placeholder="Email address">
-        </div>
-
-        <div class="form-group usernamebox">
-          <input type="text" placeholder="Enter your name" class="username">
-        </div>
-        <button type="button" class="btn btn-primary submitbutton" onclick="toggleSections()">Start!</button>
-      </form>
-    </div>
-  </div>
-
-  <div id="poll-creation-section" style="display: none;">
-    <div class="erroroption"></div>
-    <form class="polls" action="/polls" method="POST">
-      <section class="poll-form">
-        <div class="input-group mb-3 question-box">
-          <span class="input-group-text new-poll-question" id="inputGroup-sizing-default">Question</span>
-          <input type="text" class="form-control question" placeholder="Please Ask Any Question" aria-label=""
-            aria-describedby="basic-addon1">
-        </div>
-        <div class="input-group mb-3 option-box">
-          <span class="input-group-text option-title" id="inputGroup-sizing-default">Option 1</span>
-          <input type="text" class="form-control option-input" placeholder="Option" aria-label=""
-            aria-describedby="basic-addon1">
-          <textarea type="text" class="form-control option-info" placeholder="Description"></textarea>
-          <div class="input-group-append">
-            <button class="btn btn-outline-secondary delete-option" type="button">Delete</button>
-          </div>
-        </div>
-        <div class="input-group mb-3 option-box">
-          <span class="input-group-text option-title" id="inputGroup-sizing-default">Option 2</span>
-          <input type="text" class="form-control option-input" placeholder="Option" aria-label=""
-            aria-describedby="basic-addon1">
-          <textarea type="text" class="form-control option-info" placeholder="Description"></textarea>
-          <div class="input-group-append">
-            <button class="btn btn-outline-secondary delete-option" type="button">Delete</button>
-          </div>
-        </div>
-      </section>
-      <div class="input-group-append add-box">
-        <button class="btn btn-outline-secondary add-option" type="button"><i class="fa fa-plus fa-2x"></i></button>
-      </div>
-      <button type="submit" class="submit-btn" data-target="/polls/id/admin">Submit<i
-          class="fa fa-paper-plane"></i></button>
-
+  <section class="poll-form" id="poll-form">
+      <form action="/polls" method="POST">
+            <div class="form-group emailbox">
+              <!-- Email field-->
+              <span class="input-group-text" id="inputGroup-sizing-default"><strong>Email</strong></span>
+              <input type="email" id="email" name="email" class="email" placeholder="Enter your email address">
+              <!-- Question field-->
+              <span class="input-group-text" id="inputGroup-sizing-default"><strong>Question</strong></span>
+              <input type="text" class="form-control question" placeholder="Please Ask Any Question" aria-label="" aria-describedby="basic-addon1">
+              <!-- Option field 1-->
+              <input type="text" class="form-control option-input" placeholder="Option" aria-label="" aria-describedby="basic-addon1">
+              <span class="input-group-text" id="inputGroup-sizing-default"><strong>Option 1</strong></span>
+              <!-- Delete button-->
+              <button class="btn btn-outline-secondary delete-option" type="button">Delete</button>
+              <!-- Description field 1-->
+              <input type="text" class="form-control option-input" placeholder="Description" aria-label="" aria-describedby="basic-addon1">
+              <span class="input-group-text" id="inputGroup-sizing-default"><strong>Description 1</strong></span>
+              <!-- Option field 2 --> 
+              <span class="input-group-text" id="inputGroup-sizing-default"><strong>Option 2</strong></span>
+              <input type="text" class="form-control option-input" placeholder="Answer" aria-label="" aria-describedby="basic-addon1">
+              <!-- Delete button-->
+              <button class="btn btn-outline-secondary delete-option" type="button">Delete</button>
+              <!-- Description 2-->
+              <span class="input-group-text" id="inputGroup-sizing-default"><strong>Description 2</strong></span>
+              <input type="text" class="form-control option-input" placeholder="Description" aria-label="" aria-describedby="basic-addon1">
+              <!-- Submit and add buttons-->
+              <div class="buttonContainer">
+                    <button class="btn btn-outline-secondary add-option" type="button">Add more options</button>
+                    <button type="submit" class="btn btn-primary submitbutton" >Submit</button>
+              </div>            
+            </div>
     </form>
-  </div>
-
-  <script>
-    function toggleSections() {
-      document.getElementById('user-info-section').style.display = 'none';
-      document.getElementById('poll-creation-section').style.display = 'block';
-    }
-  </script>
+  </section>
 </body>
-
 </html>
