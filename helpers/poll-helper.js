@@ -20,13 +20,15 @@ class PollHelper {
 
       return await knex.transaction(async (trx) => {
 
-        const [pollId] = await trx('polls')
+        let pollId = await trx('polls')
           .insert({
             creator_email: email,
             title,
             admin_link: adminLink,
             user_link: userLink,
           }, 'id');
+
+          pollId = Number(pollId);
 
           for (let i = 0; i < options.length; i++) {
             const choiceData = {
