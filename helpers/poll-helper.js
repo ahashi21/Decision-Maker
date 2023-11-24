@@ -28,13 +28,15 @@ class PollHelper {
             user_link: userLink,
           }, 'id');
 
-        const choicesData = options.map((option, index) => ({
-          poll_id: pollId,
-          title: option,
-          description: info[index],
-        }));
-
-        await trx('choices').insert(choicesData);
+          for (let i = 0; i < options.length; i++) {
+            const choiceData = {
+              poll_id: pollId,
+              option: options[i],
+              description: info[i],
+            };
+    
+            await trx('choices').insert(choiceData);
+          }
 
         await trx.commit();
 
