@@ -2,7 +2,7 @@
 require('dotenv').config();
 
 const PollHelper = require('./helpers/poll-helper.js');
-// const mailgun = require('mailgun-js');
+const mailgun = require('mailgun-js');
 
 // Mailgun configuration
 const mg = mailgun({
@@ -33,7 +33,7 @@ const sassMiddleware = require('./lib/sass-middleware');
 const express = require('express');
 const morgan = require('morgan');
 
-const PORT = process.env.PORT || 8083;
+const PORT = process.env.PORT || 8080;
 const app = express();
 
 app.set('view engine', 'ejs');
