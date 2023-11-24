@@ -4,6 +4,30 @@ require('dotenv').config();
 const PollHelper = require('./helpers/poll-helper.js');
 // const mailgun = require('mailgun-js');
 
+// Mailgun configuration
+const mg = mailgun({
+  apiKey: process.env.MAILGUN_API_KEY,
+  domain: process.env.MAILGUN_DOMAIN
+});
+
+// Send an email using Mailgun
+function sendEmail(to, subject, text) {
+  const data = {
+    from: process.env.MAILGUN_SENDER_EMAIL,
+    to,
+    subject,
+    text,
+  };
+
+  mg.messages().send(data, (error, body) => {
+    if (error) {
+      console.error(error);
+    } else {
+      console.log(body);
+    }
+  });
+}
+
 // Web server config
 const sassMiddleware = require('./lib/sass-middleware');
 const express = require('express');
@@ -30,62 +54,33 @@ app.use(
 app.use(express.static('public'));
 
 // Separated Routes for each Resource
-const newPollSubmitRoutes = require('./routes/new-poll-submit');
-const newPollDisplayRoutes = require('./routes/new-poll-display');
 const pollResultsRoutes = require('./routes/poll-results');
 const voteRoutes = require('./routes/vote');
 const voteSubmitRoutes = require('./routes/vote-submit');
 const routeHandler = require('./routes/route-handler');
 
-app.use('/polls/new', newPollDisplayRoutes);
-app.use('/polls', newPollSubmitRoutes);
+app.use('/polls/:link', routeHandler);
 app.use('/poll-results',pollResultsRoutes);
 app.use('/vote', voteRoutes);
 app.use('*', voteSubmitRoutes);
-app.use('/', routeHandler);
 
 // Home page
 app.get('/', (req, res) => {
   res.render('index');
 });
+
+// New poll form
 app.get('/polls/new', (req, res) => {
-  // Render the page where users can create a new poll
   res.render('new_poll');
 });
 
-
-
-
-// Mailgun configuration
-// const mg = mailgun({
-//   apiKey: process.env.MAILGUN_API_KEY,
-//   domain: process.env.MAILGUN_DOMAIN
-// });
-
-// // Send an email using Mailgun
-// function sendEmail(to, subject, text) {
-//   const data = {
-//     from: process.env.MAILGUN_SENDER_EMAIL,
-//     to,
-//     subject,
-//     text,
-//   };
-
-//   mg.messages().send(data, (error, body) => {
-//     if (error) {
-//       console.error(error);
-//     } else {
-//       console.log(body);
-//     }
-//   });
-// }
-
+// Poll submission
 app.post('/polls', async (req, res) => {
   try {
     const { email, title, options, info } = req.body;
     const { adminLink, userLink } = await PollHelper.createPoll(email, title, options, info);
     const pollVars = { adminLink, userLink };
-    // sendEmail(email, 'Your poll has been created!', `Send this link to your friends: ${userLink}\nCheck the results here: ${adminLink}`);
+    sendEmail(email, 'Your poll has been created!', `Send this link to your friends: ${userLink}\nCheck the results here: ${adminLink}`);
     res.render('poll_created', pollVars);
   } catch (error) {
     console.error(error);

@@ -21,6 +21,9 @@ body {
     padding: 20px;
 
     .form-group {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
       width: 100%;
       margin-top: 20px;
 
@@ -28,7 +31,9 @@ body {
         width: 100%;
         border: 2px solid $baseColor;
         padding: 10px;
-        margin-bottom: 10px;
+      }
+      .input-group-text {
+        margin-top: 5px;
       }
     }
 
