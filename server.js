@@ -31,8 +31,9 @@ const newPollSubmitRoutes = require('./routes/new-poll-submit');
 const newPollDisplayRoutes = require('./routes/new-poll-display');
 const pollResultsRoutes = require('./routes/poll-results');
 const voteRoutes = require('./routes/vote');
-const voteSubmitRoutes = require('./routes/vote-submit')
+const voteSubmitRoutes = require('./routes/vote-submit');
 const routeHandler = require('./routes/route-handler');
+const createPollRoutes = require('./routes/create-poll');
 
 app.use(newPollSubmitRoutes);
 app.use(newPollDisplayRoutes);
@@ -40,6 +41,7 @@ app.use('/poll-results',pollResultsRoutes);
 app.use('/vote', voteRoutes);
 app.use(voteSubmitRoutes);
 app.use('/', routeHandler);
+app.use(createPollRoutes);
 
 // Home page
 app.get('/', (req, res) => {

@@ -7,7 +7,7 @@ router.get('/polls/:link', async (req, res) => {
   const { link } = req.params;
 
   try {
-    const linkType = link.length === 12 ? 'admin' : 'user'; // Adjust the length as needed
+    const linkType = link.length === 12 ? 'admin' : 'user';
 
     const pollId = await VoteHelper.getPollId(link, linkType);
 
@@ -20,7 +20,7 @@ router.get('/polls/:link', async (req, res) => {
     res.status(200).json(results);
   } catch (error) {
     console.error(error);
-    res.status(500).json({ error: 'Internal Server Error' });
+    res.status(500).json({ error: 'Error!' });
   }
 });
 

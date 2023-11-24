@@ -1,5 +1,5 @@
 const knexConfig = require('../knexfile');
-const knex = require('knex')(knexConfig[ENV]);
+const knex = require('knex')(knexConfig[process.env.NODE_ENV]);
 
 class VoteHelper {
   static async submitVote(pollId, voterName, choices) {
