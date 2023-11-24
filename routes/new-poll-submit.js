@@ -27,7 +27,7 @@ function sendEmail(to, subject, text) {
   });
 }
 
-router.post('/polls/new', async (req, res) => {
+router.post('/polls', async (req, res) => {
   try {
     const { email, choices } = req.body;
     const { adminLink, userLink } = await PollHelper.createPoll(email, choices);
